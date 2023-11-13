@@ -1,39 +1,95 @@
-function tocaSom (seletorAudio) {
-    const elemento = document.querySelector(seletorAudio);
-
-    if (elemento && elemento.localName === 'audio') {
-        elemento.play();
+const keySongs = [
+    {
+        key: 1,
+        song: 'pom',
+        down: false
+    },
+    {
+        key: 2,
+        song: 'clap',
+        down: false
+    },
+    {
+        key: 3,
+        song: 'tim',
+        down: false
+    },
+    {
+        key: 4,
+        song: '41anoos',
+        down: false
+    },
+    {
+        key: 5,
+        song: 'splash',
+        down: false
+    },
+    {
+        key: 6,
+        song: 'toim',
+        down: false
+    },
+    {
+        key: 7,
+        song: 'psh',
+        down: false
+    },
+    {
+        key: 8,
+        song: 'tic',
+        down: false
+    },
+    {
+        key: 9,
+        song: 'tom',
+        down: false
     }
-    else {
-        //alert('Elemento não encontrado');
-        console.log('Elemento não encontrado ou seletor inválido');
+]
+
+function tocaSom(audioElement) {
+    audioElement.currentTime = 0
+    audioElement.play()
+}
+
+keySongs.forEach(song => {
+    let keyElement = document.querySelector(`.tecla_${song.song}`)
+
+    song.keyElement = keyElement
+    song.audioElement = document.getElementById(`som_tecla_${song.song}`)
+
+    keyElement.addEventListener('click', () => {
+        tocaSom(song.audioElement)
+    })  
+
+})
+
+document.onkeydown = (event) => {
+    const key = event.key
+    const keySong =  keySongs.find(keySong => keySong.key == key)
+   
+    if(keySong) {
+
+        keySong.keyElement.classList.add('ativa')
+
+        if(!keySong.down) {
+            tocaSom(keySong.audioElement)
+        }
+   
+        keySong.down = true
+
     }
 
 }
 
-const listaDeTeclas = document.querySelectorAll('.tecla');
+document.onkeyup = (event) => {
+    const key = event.key
+    const keySong =  keySongs.find(keySong => keySong.key == key)
+   
+    if(keySong) {
+   
+        keySong.keyElement.classList.remove('ativa')
+        keySong.down = false
 
-//para
-for (let contador = 0; contador < listaDeTeclas.length; contador++) {
-
-    const tecla = listaDeTeclas[contador];
-    const instrumento = tecla.classList[1];
-    const idAudio = `#som_${instrumento}`; //template string
-
-    tecla.onclick = function () {
-        tocaSom(idAudio);
-    }
-
-    tecla.onkeydown = function (evento) {
-
-        if (evento.code === 'Space' || evento.code === 'Enter') {
-            tecla.classList.add('ativa');
-        }
-
-    }
-
-    tecla.onkeyup = function () {
-        tecla.classList.remove('ativa');
     }
 
 }
